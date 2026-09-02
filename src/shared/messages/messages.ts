@@ -1,0 +1,16 @@
+export const Messages = {
+  UNAUTHORIZED: 'Unauthorized',
+  USER_ALREADY_EXISTS: 'User already exists',
+  USER_REGISTERED: 'User registered successfully.',
+  USER_NOT_FOUND: 'User not found.',
+  INVALID_EMAIL_OR_PASSWORD: 'Invalid email or password.',
+  USER_LOGGED_IN: 'User logged in successfully.',
+  USER_LOGGED_OUT: 'User logged out successfully.',
+  INVALID_TOKEN: 'Invalid token.',
+  INVALID_EMAIL: 'Invalid email.',
+  TOKEN_EXPIRED: 'Token expired.',
+  FORGOT_PASSWORD: 'Forgot-password link send successfully.',
+  PASSWORD_RESET: 'Password reset successfully.',
+  INVALID_TOKEN_OR_EXPIRE: 'Invalid token or token is expired.',
+  REFRESH_TOKEN_GENERATED: 'Refresh token generated successfully.',
+};
