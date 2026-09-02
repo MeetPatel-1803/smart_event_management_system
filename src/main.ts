@@ -24,7 +24,6 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(morgan('dev'));
 
   app.setGlobalPrefix('api/v1');
