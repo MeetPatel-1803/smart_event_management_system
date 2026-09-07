@@ -34,4 +34,7 @@ async function bootstrap() {
   console.log(`Server is running on port ${process.env['PORT'] ?? 3000} 🚀`);
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

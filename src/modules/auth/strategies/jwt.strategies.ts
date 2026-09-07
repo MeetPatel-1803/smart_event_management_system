@@ -41,7 +41,7 @@ export class JwtServices {
       return this.jwtService.verify(token, {
         secret: this.jwtSecret,
       });
-    } catch (error) {
+    } catch {
       throw ApiError.invalidToken(Messages.INVALID_TOKEN_OR_EXPIRE);
     }
   }
@@ -52,7 +52,7 @@ export class JwtServices {
       return this.jwtService.verify(token, {
         secret: this.refreshSecret,
       });
-    } catch (error) {
+    } catch {
       throw ApiError.invalidToken(Messages.INVALID_TOKEN_OR_EXPIRE);
     }
   }

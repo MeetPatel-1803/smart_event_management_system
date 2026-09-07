@@ -13,4 +13,17 @@ export abstract class Helper {
     }
     return token;
   }
+
+  /**
+   * Sanitize file name.
+   * @param {*} fileName  Ex: fileName = "test file.jpg" will create "test-file.jpg"
+   * @returns {*}
+   */
+  static sanitizedFileName = (fileName: string): string => {
+    const sanitizedFile = fileName
+      .replace(/\.[^/.]+$/, '')
+      .replace(/\s+/g, '-')
+      .replace(/[^a-zA-Z0-9-_]/g, '');
+    return `${Date.now()}-${sanitizedFile}`;
+  };
 }

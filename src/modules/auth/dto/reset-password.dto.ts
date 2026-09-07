@@ -3,7 +3,6 @@ import {
   IsString,
   IsStrongPassword,
   MaxLength,
-  validate,
   ValidateIf,
 } from 'class-validator';
 

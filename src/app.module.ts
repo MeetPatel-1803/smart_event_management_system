@@ -7,6 +7,8 @@ import { getDatabaseConfig } from './config/database.config';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { EmailModule } from './modules/email/email.module';
+import { EventsModule } from './modules/events/events.module';
+import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { EmailModule } from './modules/email/email.module';
     UsersModule,
     AuthModule,
     EmailModule,
+    EventsModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
