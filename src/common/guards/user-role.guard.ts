@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { AuthenticatedRequest } from './auth.guard';
 import { Reflector } from '@nestjs/core';
-import { Role, Roles } from '../decorators/user-role.decorator';
+import { Role } from '../decorators/user-role.decorator';
 import { CONSTANTS } from '../constants/app.constants';
 import { ApiError } from 'src/shared/response/apiError.service';
 import { Messages } from 'src/shared/messages/messages';
