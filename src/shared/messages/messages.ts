@@ -13,4 +13,12 @@ export const Messages = {
   PASSWORD_RESET: 'Password reset successfully.',
   INVALID_TOKEN_OR_EXPIRE: 'Invalid token or token is expired.',
   REFRESH_TOKEN_GENERATED: 'Refresh token generated successfully.',
+  DONT_HAVE_PERMISSION: "You don't have permission to access this resource.",
+  EVENT_NAME_TAKEN: 'Event name already taken. Please try with another name.',
+  EVENT_CREATED: 'Event is created successfully.',
+  ALL_EVENTS_FETCHED: 'All events fetched successfully.',
+  EVENT_FETCHED: 'Event fetched successfully.',
+  EVENT_NOT_FOUND: 'Event not found.',
+  EVENT_UPDATED: 'Event updated successfully.',
+  EVENT_DELETED: 'Event deleted successfully.',
 };

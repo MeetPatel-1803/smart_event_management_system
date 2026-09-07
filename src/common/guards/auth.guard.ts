@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { JwtServices } from 'src/modules/auth/strategies/jwt.strategies';
@@ -7,10 +7,11 @@ import { Messages } from 'src/shared/messages/messages';
 import { ApiError } from 'src/shared/response/apiError.service';
 import { Repository } from 'typeorm';
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user: User;
 }
 
+@Injectable()
 export class AuthUserGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtServices,

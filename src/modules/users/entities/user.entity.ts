@@ -1,7 +1,8 @@
 import { CONSTANTS } from 'src/common/constants/app.constants';
 import { BaseEntity } from 'src/common/entities/base.entity';
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Event } from 'src/modules/events/entities/event.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -34,4 +35,7 @@ export class User extends BaseEntity {
   @Exclude()
   @Column({ name: 'refresh_token', type: 'varchar', nullable: true })
   refreshToken: string | null;
+
+  @OneToMany(() => Event, (event) => event.organiser_id)
+  events: Event[];
 }
