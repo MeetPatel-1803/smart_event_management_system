@@ -84,27 +84,40 @@ export class EventsService {
     id: string,
     updateEventDto: UpdateEventDto,
   ): Promise<EventResponseDto> {
+    const {
+      capacity,
+      name,
+      description,
+      price,
+      startTime,
+      endTime,
+      location,
+      category,
+      registrationDeadline,
+      bannerImage,
+      status,
+    } = updateEventDto;
     const event = await this.eventRepository.findOne({ where: { id } });
 
     if (!event) {
       throw ApiError.notFound(Messages.EVENT_NOT_FOUND);
     }
 
-    event.capacity = (updateEventDto.capacity as number)!;
-    event.name = (updateEventDto.name as string)!;
-    event.description = (updateEventDto.description as string)!;
-    event.price = (updateEventDto.price as number)!;
-    event.startTime = new Date(updateEventDto.startTime as string)!;
-    event.endTime = new Date(updateEventDto.endTime as string)!;
-    event.location = (updateEventDto.location as string)!;
-    event.category = updateEventDto.category!;
-    event.registrationDeadline = new Date(
-      updateEventDto.registrationDeadline as string,
-    )!;
+    event.capacity = capacity ?? event.capacity;
+    event.name = name ?? event.name;
+    event.description = description ?? event.description;
+    event.price = price ?? event.price;
+    event.startTime = startTime ? new Date(startTime) : event.startTime;
+    event.endTime = endTime ? new Date(endTime) : event.endTime;
+    event.location = location ?? event.location;
+    event.category = category ?? event.category;
+    event.status = status ?? event.status;
+    event.registrationDeadline = registrationDeadline
+      ? new Date(registrationDeadline)
+      : event.registrationDeadline;
 
-    if (updateEventDto.bannerImage) {
-      const imageFile =
-        updateEventDto.bannerImage as unknown as Express.Multer.File;
+    if (bannerImage) {
+      const imageFile = bannerImage as unknown as Express.Multer.File;
       const fileName = Helper.sanitizedFileName(imageFile.originalname);
       await this.imageService.uploadFile(imageFile, fileName);
       event.bannerImage = fileName;

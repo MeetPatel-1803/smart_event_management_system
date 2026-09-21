@@ -44,6 +44,8 @@ export class AuthService {
       password: hashedPassword,
     });
 
+    await this.userRepository.save(newUser);
+
     const accessToken = this.jwtService.signAccessToken({
       id: newUser.id,
       role: newUser.role,

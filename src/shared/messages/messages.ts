@@ -21,4 +21,17 @@ export const Messages = {
   EVENT_NOT_FOUND: 'Event not found.',
   EVENT_UPDATED: 'Event updated successfully.',
   EVENT_DELETED: 'Event deleted successfully.',
+  USER_REGISTERED_SUCCESSFULLY:
+    'You have successfully registered for the event.',
+  SEEDER_NOT_FOUND: 'Seeder not found.',
+  ALREADY_SEATS_BOOKED:
+    'Your selected seat(s) are already booked. Please select other seats.',
+  NOT_ENOUGH_SEATS: (availableSeats: number) =>
+    `Not enough seats. Only ${availableSeats} seats are available.`,
+  SEAT_TEMPORARILY_BOOKED:
+    'This seat is temporarily on hold by another user. Please select another seat.',
+  USER_WAITLISTED_SUCCESSFULLY: 'You have been added to waitlist successfully.',
+  REGISTRATION_NOT_FOUND: 'Registration not found or not in REGISTERED state.',
+  CANNOT_CANCEL_MORE_SEATS: 'Cannot cancel more seats than registered.',
+  REGISTRATION_CANCELLED_SUCCESSFULLY: 'Registration cancelled successfully.',
 };
