@@ -1,7 +1,12 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Inject,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { JwtServices } from 'src/modules/auth/strategies/jwt.strategies';
+import { JwtServices } from '../../modules/auth/strategies/jwt.strategies';
 import { User } from 'src/modules/users/entities/user.entity';
 import { Messages } from 'src/shared/messages/messages';
 import { ApiError } from 'src/shared/response/apiError.service';
@@ -14,6 +19,7 @@ export interface AuthenticatedRequest extends Request {
 @Injectable()
 export class AuthUserGuard implements CanActivate {
   constructor(
+    @Inject(JwtServices)
     private readonly jwtService: JwtServices,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -39,7 +45,7 @@ export class AuthUserGuard implements CanActivate {
 
     const decodedToken = this.jwtService.verifyAccessToken(tokenWithoutBearer);
     const user = await this.userRepository.findOneBy({
-      id: decodedToken.id,
+      id: decodedToken?.id,
     });
 
     if (!user?.refreshToken) {

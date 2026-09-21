@@ -57,4 +57,16 @@ export const CONSTANTS = {
     },
   },
   CLOUDINARY: 'Cloudinary',
+  PAGE: 1,
+  LIMIT: 10,
+  QUEUE: {
+    EVENT_WAITING_LIST: 'event-waiting-list',
+  } as const,
+  EVENT_JOBS: {
+    PROCESS_NEXT_WAITING_USER: 'process-next-waiting-user',
+  },
+  SORT: {
+    ASC: 'ASC',
+    DESC: 'DESC',
+  } as const,
 };

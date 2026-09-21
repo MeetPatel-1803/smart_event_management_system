@@ -1,11 +1,15 @@
+import 'reflect-metadata';
+
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule, ObserveInstrument } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import morgan from 'morgan';
 import { ApiErrorFilter } from './common/filters/http-exception.filter';
+import { SeederRunner } from './database/seeders/seed';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
+    instrument: ObserveInstrument,
     logger: ['error', 'warn', 'log'],
   });
 
@@ -29,6 +33,20 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   app.useGlobalFilters(new ApiErrorFilter());
+
+  const command = process.argv[2];
+
+  if (command === 'seed') {
+    try {
+      const seederRunner = new SeederRunner(app);
+      await seederRunner.run();
+      await app.close();
+      process.exit(0);
+    } catch (error) {
+      console.error(`❌ ${error}`);
+      process.exit(1);
+    }
+  }
 
   await app.listen(process.env['PORT'] ?? 3000);
   console.log(`Server is running on port ${process.env['PORT'] ?? 3000} 🚀`);

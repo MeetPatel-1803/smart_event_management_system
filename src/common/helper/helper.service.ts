@@ -26,4 +26,10 @@ export abstract class Helper {
       .replace(/[^a-zA-Z0-9-_]/g, '');
     return `${Date.now()}-${sanitizedFile}`;
   };
+
+  static getPaymentWindowExpiration(): Date {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() + 10);
+    return date;
+  }
 }

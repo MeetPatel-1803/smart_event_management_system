@@ -89,7 +89,7 @@ export class Event extends BaseEntity {
   // @Index()
   // organiser: User;
 
-  @Column({ name: 'organiser_id' })
+  @Column({ name: 'organiser_id', type: 'uuid' })
   @Index()
   organiser_id: string;
 

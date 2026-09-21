@@ -43,12 +43,12 @@ export class CreateEventDto {
   @IsNumber()
   capacity: number;
 
-  //   @IsNotEmpty()
-  //   @IsEnum(EventStatus)
-  //   status: EventStatus;
+  // @IsNotEmpty()
+  // @IsEnum(EventStatus)
+  // status: EventStatus;
 
-  @IsOptional()
-  bannerImage?: string;
+  // @IsOptional()
+  // bannerImage?: string;
 
   @IsNotEmpty()
   @IsEnum(EventCategories)

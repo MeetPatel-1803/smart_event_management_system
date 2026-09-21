@@ -6,18 +6,19 @@ import { Event } from 'src/modules/events/entities/event.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
-  @Column({ name: 'name', length: 100 })
+  @Column({ name: 'name', type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ name: 'email', unique: true })
+  @Column({ name: 'email', type: 'varchar', unique: true })
   email: string;
 
   @Exclude()
-  @Column({ name: 'password', length: 60 })
+  @Column({ name: 'password', type: 'varchar', length: 60 })
   password: string;
 
   @Column({
     name: 'role',
+    type: 'varchar',
     enum: Object.values(CONSTANTS.ROLES),
     default: CONSTANTS.ROLES.USER,
   })

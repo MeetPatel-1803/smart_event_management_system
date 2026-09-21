@@ -3,24 +3,41 @@ import { User } from 'src/modules/users/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { Event } from './event.entity';
 
-enum RegistrationStatus {
-  REGISTERED = 'REGISTERED',
+export enum RegistrationStatus {
+  EXPIRED = 'EXPIRED',
   CANCELLED = 'CANCELLED',
+  WAITLISTED = 'WAITLISTED',
+  REGISTERED = 'REGISTERED',
+  PAYMENT_PENDING = 'PAYMENT_PENDING',
 }
 
 @Entity('user_events')
-@Index(['user', 'event'], { unique: true }) // This will prevent from duplicate registrations
+@Index(['userId', 'eventId'], { unique: true })
 export class UserEvent extends BaseEntity {
+  @Column({ name: 'user_id', type: 'uuid' })
+  userId: string;
+
+  @Column({ name: 'event_id', type: 'uuid' })
+  eventId: string;
+
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  @Index()
   user: User;
 
   @ManyToOne(() => Event, (event) => event.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'event_id' })
-  @Index()
   event: Event;
 
   @Column({ type: 'enum', enum: RegistrationStatus, nullable: true })
   status: RegistrationStatus;
+
+  // @Column({ type: 'int', array: true })
+  // reservedSeats: number[];
+
+  @Column({ type: 'int' })
+  noOfSeatsRequired: number;
+
+  // Payment window expiresAt
+  @Column({ type: 'timestamp', nullable: true })
+  expiresAt: Date;
 }
