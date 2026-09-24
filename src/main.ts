@@ -11,6 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     instrument: ObserveInstrument,
     logger: ['error', 'warn', 'log'],
+    rawBody: true,
   });
 
   app.useGlobalPipes(
@@ -30,7 +31,9 @@ async function bootstrap() {
 
   app.use(morgan('dev'));
 
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['admin/queues'],
+  });
 
   app.useGlobalFilters(new ApiErrorFilter());
 

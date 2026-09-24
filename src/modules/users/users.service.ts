@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { RegistrationHistoryDto } from './dto/registration-history.dto';
 import { Event, EventStatus } from '../events/entities/event.entity';
 import { ResponseDto, ResponseMetaDTO } from 'src/common/dto/response.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
@@ -19,8 +20,10 @@ import {
 } from './dto/register-event-response.dto';
 import { CancelRegistrationDto } from './dto/cancel-registration.dto';
 import { CancelRegistrationResDto } from './dto/cancel-registration-response.dto';
-import { EventProducer } from 'src/shared/queue/producers/event.producer';
+import { QueueProducer } from 'src/shared/queue/producers/queue.producer';
 import { CONSTANTS } from 'src/common/constants/app.constants';
+import { PaymentService } from 'src/shared/payment/payment.service';
+import { Helper } from 'src/common/helper/helper.service';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +34,8 @@ export class UsersService {
     @InjectRepository(UserEvent)
     private readonly userEventRepository: Repository<UserEvent>,
 
-    private readonly eventProducer: EventProducer,
+    private readonly queueProducer: QueueProducer,
+    private readonly paymentService: PaymentService,
   ) {}
 
   async listEvents(
@@ -73,20 +77,39 @@ export class UsersService {
       throw ApiError.notFound(Messages.EVENT_NOT_FOUND);
     }
 
-    const userEventDetails = await this.userEventRepository.find({
-      where: {
-        eventId: eventId,
-      },
+    const existingUserEvent = await this.userEventRepository.findOne({
+      where: { eventId, userId: user.id },
     });
 
-    const totalSeatsOccupied = userEventDetails
-      .filter(
-        (userEvent) =>
-          userEvent.status === RegistrationStatus.REGISTERED ||
-          userEvent.status === RegistrationStatus.PAYMENT_PENDING,
-      )
-      .reduce((acc, curr) => acc + curr.noOfSeatsRequired, 0);
+    if (existingUserEvent) {
+      if (existingUserEvent.status === RegistrationStatus.REGISTERED) {
+        throw ApiError.conflict(Messages.ALREADY_REGISTERED);
+      }
+      if (existingUserEvent.status === RegistrationStatus.WAITLISTED) {
+        throw ApiError.conflict(Messages.ALREADY_WAITLISTED);
+      }
+      if (
+        existingUserEvent.status === RegistrationStatus.PAYMENT_PENDING &&
+        existingUserEvent.expiresAt &&
+        existingUserEvent.expiresAt > new Date()
+      ) {
+        throw ApiError.conflict(Messages.PAYMENT_PENDING);
+      }
+    }
 
+    const seatsResult = (await this.userEventRepository
+      .createQueryBuilder('userEvent')
+      .select('SUM(userEvent.noOfSeatsRequired)', 'totalSeatsOccupied')
+      .where('userEvent.eventId = :eventId', { eventId })
+      .andWhere('userEvent.status IN (:...statuses)', {
+        statuses: [
+          RegistrationStatus.REGISTERED,
+          RegistrationStatus.PAYMENT_PENDING,
+        ],
+      })
+      .getRawOne()) as { totalSeatsOccupied: number | null };
+
+    const totalSeatsOccupied = seatsResult?.totalSeatsOccupied || 0;
     const availableSeats = event.capacity - totalSeatsOccupied;
 
     if (availableSeats < noOfSeats) {
@@ -106,30 +129,24 @@ export class UsersService {
     }
 
     // here checkout for payment
-    // await this.userEventRepository.save({
-    //   eventId,
-    //   userId: user.id,
-    //   status: RegistrationStatus.PAYMENT_PENDING,
-    //   expiresAt: Helper.getPaymentWindowExpiration(),
-    //   noOfSeatsRequired: noOfSeats,
-    // });
-
-    // If payment done then register for the event.
-    // here create registration
-
-    // then send email to user about the event registration
-    // QR code generation
-
-    const registeredUser = this.userEventRepository.create({
+    const registration = await this.userEventRepository.save({
       eventId,
       userId: user.id,
-      status: RegistrationStatus.REGISTERED,
+      status: RegistrationStatus.PAYMENT_PENDING,
+      expiresAt: Helper.getPaymentWindowExpiration(),
       noOfSeatsRequired: noOfSeats,
     });
 
-    await this.userEventRepository.save(registeredUser);
+    const paymentResult = await this.paymentService.createPayment({
+      eventId,
+      userId: user.id,
+      amount: event.price,
+      currency: CONSTANTS.STRIPE_CURRENCY.INR,
+      registrationId: registration.id,
+      noOfSeats,
+    });
 
-    return new RegisterEventResDto({ registeredUser });
+    return new RegisterEventResDto({ registration, ...paymentResult });
   }
 
   async cancelRegistration(
@@ -166,13 +183,41 @@ export class UsersService {
     await this.userEventRepository.save(registration);
 
     // Will add the current event into queue for seat allotment to the next waiting user.
-    await this.eventProducer.addEventWaitingListJob(
+    await this.queueProducer.addEventWaitingListJob(
       CONSTANTS.EVENT_JOBS.PROCESS_NEXT_WAITING_USER,
       registration.eventId,
     );
 
     return new CancelRegistrationResDto({
       cancelledRegistration: registration,
+    });
+  }
+
+  async listRegistrationHistory(
+    user: User,
+    query: PaginationDto,
+  ): Promise<ResponseDto<RegistrationHistoryDto, ResponseMetaDTO>> {
+    const { limit, page } = query;
+    const skip = (page! - 1) * limit!;
+
+    const [registrations, total] = await this.userEventRepository.findAndCount({
+      where: { userId: user.id },
+      relations: {
+        event: true,
+      },
+      skip,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    return new ResponseDto({
+      data: new RegistrationHistoryDto({ registrations }),
+      meta: new ResponseMetaDTO({
+        total,
+        limit,
+        page,
+        pageCount: Math.ceil(total / limit!),
+      }),
     });
   }
 }

@@ -18,6 +18,11 @@ export const CONSTANTS = {
       TEXT: (url: string) =>
         `Click on the link to reset your password. This link will expire in 1 minutes. ${url}`,
     },
+    SEND_TICKET: {
+      SUB: 'Your Event Ticket',
+      TEXT: `Thank you for your registration. Please find your event ticket attached.`,
+      FILE_NAME: 'ticket.pdf',
+    },
   },
   EVENTS: {
     STATUS: {
@@ -61,12 +66,26 @@ export const CONSTANTS = {
   LIMIT: 10,
   QUEUE: {
     EVENT_WAITING_LIST: 'event-waiting-list',
+    EMAIL_QUEUE: 'email-queue',
+    QR_CODE_QUEUE: 'qr-code-queue',
   } as const,
   EVENT_JOBS: {
     PROCESS_NEXT_WAITING_USER: 'process-next-waiting-user',
+    SEND_CONFIRMATION_EMAIL: 'send-confirmation-email',
+    GENERATE_QR_CODE: 'generate-qr-code',
   },
   SORT: {
     ASC: 'ASC',
     DESC: 'DESC',
   } as const,
+  PAYMENT_PROVIDER: Symbol('PAYMENT_PROVIDER'),
+  STRIPE_EVENTS: {
+    CHECKOUT_SESSION_COMPLETED: 'checkout.session.completed',
+    CHECKOUT_SESSION_EXPIRED: 'checkout.session.expired',
+    PAYMENT_INTENT_FAILED: 'payment_intent.payment_failed',
+    PAYMENT_INTENT_SUCCEEDED: 'payment_intent.succeeded',
+  },
+  STRIPE_CURRENCY: {
+    INR: 'inr',
+  },
 };

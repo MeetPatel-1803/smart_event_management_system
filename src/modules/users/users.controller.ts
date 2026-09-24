@@ -24,6 +24,7 @@ import {
 } from './dto/register-event-response.dto';
 import { CancelRegistrationDto } from './dto/cancel-registration.dto';
 import { CancelRegistrationResDto } from './dto/cancel-registration-response.dto';
+import { RegistrationHistoryDto } from './dto/registration-history.dto';
 
 @Controller('users')
 @UseGuards(AuthUserGuard)
@@ -43,12 +44,7 @@ export class UsersController {
       data,
       CONSTANTS.META_CODE.SUCCESS,
       Messages.ALL_EVENTS_FETCHED,
-      {
-        total: meta.total,
-        limit: meta.limit,
-        page: meta.page,
-        pageCount: meta.pageCount,
-      },
+      { ...meta },
     );
   }
 
@@ -66,16 +62,16 @@ export class UsersController {
 
     if (result instanceof WaitlistedUserResDto) {
       return this.responseService.success(
-        { waitListedUser: result.waitListedUser },
+        { ...result },
         CONSTANTS.META_CODE.SUCCESS,
         Messages.USER_WAITLISTED_SUCCESSFULLY,
       );
     }
 
     return this.responseService.success(
-      { registeredUser: result.registeredUser },
+      { ...result },
       CONSTANTS.META_CODE.SUCCESS,
-      Messages.USER_REGISTERED_SUCCESSFULLY,
+      Messages.REGISTRATION_INITIATED_SUCCESSFULLY,
     );
   }
 
@@ -97,5 +93,22 @@ export class UsersController {
       Messages.REGISTRATION_CANCELLED_SUCCESSFULLY,
     );
   }
-  async listRegistrationHistory() {}
+
+  @Get('/history')
+  async listRegistrationHistory(
+    @Query() query: PaginationDto,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<ResponseDto<RegistrationHistoryDto, ResponseMetaDTO>> {
+    const { data, meta } = await this.usersService.listRegistrationHistory(
+      req.user,
+      query,
+    );
+
+    return this.responseService.success(
+      data,
+      CONSTANTS.META_CODE.SUCCESS,
+      Messages.REGISTRATION_HISTORY_FETCHED,
+      { ...meta },
+    );
+  }
 }

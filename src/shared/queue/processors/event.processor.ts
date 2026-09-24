@@ -26,7 +26,7 @@ export class EventProcessor extends WorkerHost {
   async process(job: Job<string>): Promise<any> {
     switch (job.name) {
       case CONSTANTS.EVENT_JOBS.PROCESS_NEXT_WAITING_USER:
-        return this.eventWaitingListWorker(job.data);
+        return await this.eventWaitingListWorker(job.data);
 
       default:
         throw new Error(`Unknown job name: ${job.name}`);

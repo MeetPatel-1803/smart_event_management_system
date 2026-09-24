@@ -37,4 +37,25 @@ export class EmailService {
       throw error;
     }
   }
+
+  async sendTicketEmail(email: string, ticketPdf: Buffer) {
+    try {
+      await this.mailService.sendMail({
+        to: email,
+        from: process.env.EMAIL_USERNAME,
+        subject: CONSTANTS.EMAIL.SEND_TICKET.SUB,
+        text: CONSTANTS.EMAIL.SEND_TICKET.TEXT,
+        attachments: [
+          {
+            filename: CONSTANTS.EMAIL.SEND_TICKET.FILE_NAME,
+            content: ticketPdf,
+            contentType: 'application/pdf',
+          },
+        ],
+      });
+    } catch (error) {
+      console.error('Error sending ticket email:', error);
+      throw error;
+    }
+  }
 }
