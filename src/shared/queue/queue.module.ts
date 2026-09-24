@@ -2,16 +2,23 @@ import { Module } from '@nestjs/common';
 import { QueueService } from './queue.service';
 import { BullModule } from '@nestjs/bullmq';
 import { Queues } from './queue.index';
-import { EventProducer } from './producers/event.producer';
+import { QueueProducer } from './producers/queue.producer';
 import { getRedisConfig } from 'src/config/redis.config';
 import { EventProcessor } from './processors/event.processor';
+import { QrProcessor } from './processors/qr.processor';
+import { EmailProcessor } from './processors/email.processor';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEvent } from 'src/modules/events/entities/user-event.entity';
 import { Event } from 'src/modules/events/entities/event.entity';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { ExpressAdapter } from '@bull-board/express';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { EmailModule } from 'src/modules/email/email.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEvent, Event]),
+    EmailModule,
     BullModule.forRootAsync({
       useFactory: () => ({
         connection: getRedisConfig(),
@@ -32,10 +39,26 @@ import { Event } from 'src/modules/events/entities/event.entity';
         // settings: Advanced Queue configuration settings.
       }),
     }),
+    BullBoardModule.forRoot({
+      route: '/admin/queues',
+      adapter: ExpressAdapter,
+    }),
     BullModule.registerQueue(...Queues),
+    BullBoardModule.forFeature(
+      ...Queues.map((queue) => ({
+        name: queue.name,
+        adapter: BullMQAdapter,
+      })),
+    ),
   ],
   controllers: [],
-  providers: [QueueService, EventProducer, EventProcessor],
-  exports: [EventProducer, EventProcessor],
+  providers: [
+    QueueService,
+    QueueProducer,
+    EventProcessor,
+    QrProcessor,
+    EmailProcessor,
+  ],
+  exports: [QueueProducer, EventProcessor, QrProcessor, EmailProcessor],
 })
 export class QueueModule {}

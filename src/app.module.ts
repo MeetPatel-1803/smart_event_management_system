@@ -14,6 +14,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { CronsModule } from './shared/crons/crons.module';
 import { SeedersModule } from './database/seeders/seeders.module';
 import { createObserveModule } from '@nestjs/observe';
+import { PaymentModule } from './shared/payment/payment.module';
+import { getPaymentProvidersConfig } from './shared/payment/configs/providers.config';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -32,6 +34,9 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
         ]
       : []),
 
+    PaymentModule.forRootAsync({
+      useFactory: () => getPaymentProvidersConfig(),
+    }),
     UsersModule,
     AuthModule,
     EmailModule,

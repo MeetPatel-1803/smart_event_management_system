@@ -27,6 +27,9 @@
     "seed": "ts-node -r tsconfig-paths/register src/main.ts seed"
   },
   "dependencies": {
+    "@bull-board/api": "^9.10.1",
+    "@bull-board/express": "^9.10.1",
+    "@bull-board/nestjs": "^9.10.1",
     "@nestjs-modules/mailer": "^2.3.7",
     "@nestjs/bullmq": "^12.0.0",
     "@nestjs/common": "^11.0.1",
@@ -49,10 +52,13 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
     "nodemailer": "^9.1.0",
+    "pdfkit": "^0.20.2",
     "pg": "^8.23.0",
+    "qrcode": "^1.5.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "streamifier": "^0.1.1",
+    "stripe": "^22.6.2",
     "typeorm": "^1.1.0"
   },
   "devDependencies": {
@@ -66,7 +72,10 @@
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.2.0",
     "@types/node": "^24.0.0",
+    "@types/pdfkit": "^0.17.6",
+    "@types/qrcode": "^1.5.6",
     "@types/streamifier": "^0.1.2",
+    "@types/stripe": "^8.0.417",
     "@types/supertest": "^7.0.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",

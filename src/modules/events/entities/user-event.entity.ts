@@ -4,7 +4,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { Event } from './event.entity';
 
 export enum RegistrationStatus {
-  EXPIRED = 'EXPIRED',
+  FAILED = 'FAILED',
   CANCELLED = 'CANCELLED',
   WAITLISTED = 'WAITLISTED',
   REGISTERED = 'REGISTERED',
@@ -39,5 +39,5 @@ export class UserEvent extends BaseEntity {
 
   // Payment window expiresAt
   @Column({ type: 'timestamp', nullable: true })
-  expiresAt: Date;
+  expiresAt: Date | null;
 }

@@ -23,6 +23,8 @@ export const Messages = {
   EVENT_DELETED: 'Event deleted successfully.',
   USER_REGISTERED_SUCCESSFULLY:
     'You have successfully registered for the event.',
+  REGISTRATION_INITIATED_SUCCESSFULLY:
+    'Registration initiated successfully. Please complete the payment to finalize your registration.',
   SEEDER_NOT_FOUND: 'Seeder not found.',
   ALREADY_SEATS_BOOKED:
     'Your selected seat(s) are already booked. Please select other seats.',
@@ -34,4 +36,13 @@ export const Messages = {
   REGISTRATION_NOT_FOUND: 'Registration not found or not in REGISTERED state.',
   CANNOT_CANCEL_MORE_SEATS: 'Cannot cancel more seats than registered.',
   REGISTRATION_CANCELLED_SUCCESSFULLY: 'Registration cancelled successfully.',
+  CLIENT_SECRET_NOT_RETURNED: 'Stripe client secret not returned',
+  PAYMENT_CREATED: 'Payment created successfully',
+  ALREADY_REGISTERED: 'You have already registered for this event.',
+  ALREADY_WAITLISTED: 'You have already waitlisted for this event.',
+  PAYMENT_SUCCESS: 'Payment successful.',
+  PAYMENT_CANCELLED: 'Payment cancelled.',
+  PAYMENT_PENDING:
+    'You already have a pending registration for this event. Please complete the payment before the window expires.',
+  REGISTRATION_HISTORY_FETCHED: 'Registration history fetched successfully.',
 };

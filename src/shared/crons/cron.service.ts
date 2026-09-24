@@ -7,7 +7,7 @@ import {
   UserEvent,
 } from 'src/modules/events/entities/user-event.entity';
 import { In, LessThan, Repository } from 'typeorm';
-import { EventProducer } from '../queue/producers/event.producer';
+import { QueueProducer } from '../queue/producers/queue.producer';
 import { CONSTANTS } from 'src/common/constants/app.constants';
 
 interface RegistrationEvent {
@@ -26,7 +26,7 @@ export class CronServices {
     @InjectRepository(Event)
     private readonly event: Repository<Event>,
 
-    private readonly eventProducer: EventProducer,
+    private readonly queueProducer: QueueProducer,
   ) {}
 
   // This cron will run every 10 minutes and check for the registrations that are unpaid and have expiredAt < now.
@@ -39,6 +39,9 @@ export class CronServices {
         status: RegistrationStatus.PAYMENT_PENDING,
       })
       .andWhere('userEvent.expiresAt < :now', { now: new Date() })
+      .orWhere('userEvent.status = :status', {
+        status: RegistrationStatus.FAILED,
+      })
       .select('userEvent.event_id', 'eventId')
       .addSelect('ARRAY_AGG(userEvent.user_id)', 'userIds')
       .groupBy('userEvent.event_id')
@@ -53,21 +56,18 @@ export class CronServices {
       // Update booking status from PAYMENT_PENDING to EXPIRED & release the seats.
       await Promise.all(
         expiredRegistrations?.map((data: RegistrationEvent) =>
-          this.userEvent.update(
-            {
-              eventId: data.eventId,
-              userId: In(data.userIds),
-              status: RegistrationStatus.PAYMENT_PENDING,
-              expiresAt: LessThan(new Date()),
-            },
-            { status: RegistrationStatus.EXPIRED },
-          ),
+          this.userEvent.delete({
+            eventId: data.eventId,
+            userId: In(data.userIds),
+            status: RegistrationStatus.PAYMENT_PENDING,
+            expiresAt: LessThan(new Date()),
+          }),
         ),
       );
 
       const results = await Promise.allSettled(
         eventIds.map((id) =>
-          this.eventProducer.addEventWaitingListJob(
+          this.queueProducer.addEventWaitingListJob(
             CONSTANTS.EVENT_JOBS.PROCESS_NEXT_WAITING_USER,
             id,
           ),

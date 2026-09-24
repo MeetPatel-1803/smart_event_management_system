@@ -32,4 +32,10 @@ export abstract class Helper {
     date.setMinutes(date.getMinutes() + 10);
     return date;
   }
+
+  // Imp: Stripe generally expects amounts in the smallest currency unit.
+  static getFormatedAmount(price: number): number {
+    const amount = price * 100; // Convert to paise
+    return Number(amount.toFixed(2)); // Convert back to paise after rounding
+  }
 }

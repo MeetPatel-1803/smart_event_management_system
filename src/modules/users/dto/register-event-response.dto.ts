@@ -7,7 +7,13 @@ export class RegisterEventResDto {
   }
 
   @Expose()
-  registeredUser: UserEvent;
+  registration: UserEvent;
+
+  @Expose()
+  providerPaymentId: string;
+
+  @Expose()
+  clientSecret: string;
 }
 
 export class WaitlistedUserResDto {
