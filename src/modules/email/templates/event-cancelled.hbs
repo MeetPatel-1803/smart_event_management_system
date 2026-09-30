@@ -1,0 +1,403 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='x-apple-disable-message-reformatting' />
+    <title>Event Cancelled - {{eventName}}</title>
+  </head>
+
+  <body
+    style='margin:0; padding:0; width:100%; min-width:100%; background-color:#F5F7FB; font-family:Arial, Helvetica, sans-serif; color:#1F2937;'
+  >
+
+    <!-- Full Email Wrapper -->
+    <table
+      role='presentation'
+      width='100%'
+      cellspacing='0'
+      cellpadding='0'
+      border='0'
+      align='center'
+      style='width:100%; min-width:100%; margin:0; padding:0; background-color:#F5F7FB;'
+    >
+      <tr>
+        <td align='center' valign='top' style='padding:32px 16px;'>
+
+          <!-- Main Container -->
+          <table
+            role='presentation'
+            width='600'
+            cellspacing='0'
+            cellpadding='0'
+            border='0'
+            align='center'
+            style='width:600px; max-width:600px; margin:0 auto; background-color:#FFFFFF; border:1px solid #E5E7EB; border-radius:10px; overflow:hidden;'
+          >
+
+            <!-- Header -->
+            <tr>
+              <td
+                align='center'
+                style='padding:28px 32px; background-color:#4F46E5;'
+              >
+                <div
+                  style='font-family:Arial, Helvetica, sans-serif; font-size:24px; line-height:32px; font-weight:700; color:#FFFFFF; text-align:center;'
+                >
+                  Smart Events
+                </div>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style='padding:40px 40px 32px 40px;'>
+
+                <!-- Heading -->
+                <h1
+                  style='margin:0 0 24px 0; font-family:Arial, Helvetica, sans-serif; font-size:28px; line-height:36px; font-weight:700; color:#111827;'
+                >
+                  Event Cancelled
+                </h1>
+
+                <!-- Greeting -->
+                <p
+                  style='margin:0 0 16px 0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:26px; color:#374151;'
+                >
+                  Hi
+                  {{userName}},
+                </p>
+
+                <!-- Cancellation Message -->
+                <p
+                  style='margin:0 0 16px 0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:26px; color:#374151;'
+                >
+                  We're writing to let you know that the event
+                  <strong style='color:#111827;'>
+                    {{eventName}}
+                  </strong>
+                  has been cancelled.
+                </p>
+
+                <p
+                  style='margin:0 0 24px 0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:26px; color:#374151;'
+                >
+                  We apologize for any inconvenience this may cause. Please
+                  review the cancellation details below.
+                </p>
+
+                <!-- Cancellation Status -->
+                <table
+                  role='presentation'
+                  width='100%'
+                  cellspacing='0'
+                  cellpadding='0'
+                  border='0'
+                  style='width:100%; margin:0 0 24px 0;'
+                >
+                  <tr>
+                    <td
+                      style='padding:16px 18px; background-color:#FEF2F2; border:1px solid #FECACA; border-radius:8px;'
+                    >
+                      <!-- <p
+                        style='margin:0 0 4px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#B91C1C;'
+                      >
+                        ⚠️ Event Status
+                      </p> -->
+
+                      <p
+                        style='margin:0; font-family:Arial, Helvetica, sans-serif; font-size:18px; line-height:28px; font-weight:700; color:#991B1B;'
+                      >
+                        ⚠️ This event has been cancelled
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Event Details Card -->
+                <table
+                  role='presentation'
+                  width='100%'
+                  cellspacing='0'
+                  cellpadding='0'
+                  border='0'
+                  style='width:100%; margin:0 0 28px 0; background-color:#F9FAFB; border:1px solid #E5E7EB; border-radius:8px;'
+                >
+                  <tr>
+                    <td style='padding:20px;'>
+
+                      <!-- Card Heading -->
+                      <p
+                        style='margin:0 0 18px 0; font-family:Arial, Helvetica, sans-serif; font-size:18px; line-height:26px; font-weight:700; color:#111827;'
+                      >
+                        Event Details
+                      </p>
+
+                      <!-- Event Information -->
+                      <table
+                        role='presentation'
+                        width='100%'
+                        cellspacing='0'
+                        cellpadding='0'
+                        border='0'
+                        style='width:100%;'
+                      >
+
+                        <!-- Event Name -->
+                        <tr>
+                          <td
+                            width='38%'
+                            valign='top'
+                            style='padding:7px 8px 7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#6B7280;'
+                          >
+                            🎫 Event Name
+                          </td>
+
+                          <td
+                            width='62%'
+                            valign='top'
+                            style='padding:7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; font-weight:600; color:#111827;'
+                          >
+                            {{eventName}}
+                          </td>
+                        </tr>
+
+                        <!-- Date -->
+                        <tr>
+                          <td
+                            valign='top'
+                            style='padding:7px 8px 7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#6B7280;'
+                          >
+                            📅 Date
+                          </td>
+
+                          <td
+                            valign='top'
+                            style='padding:7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#374151;'
+                          >
+                            {{eventDate}}
+                          </td>
+                        </tr>
+
+                        <!-- Time -->
+                        <tr>
+                          <td
+                            valign='top'
+                            style='padding:7px 8px 7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#6B7280;'
+                          >
+                            🕐 Time
+                          </td>
+
+                          <td
+                            valign='top'
+                            style='padding:7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#374151;'
+                          >
+                            {{eventTime}}
+                          </td>
+                        </tr>
+
+                        <!-- Location -->
+                        <tr>
+                          <td
+                            valign='top'
+                            style='padding:7px 8px 7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#6B7280;'
+                          >
+                            📍 Location
+                          </td>
+
+                          <td
+                            valign='top'
+                            style='padding:7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#374151;'
+                          >
+                            {{eventLocation}}
+                          </td>
+                        </tr>
+
+                        <!-- Event Type -->
+                        <tr>
+                          <td
+                            valign='top'
+                            style='padding:7px 8px 7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#6B7280;'
+                          >
+                            🎟️ Event Type
+                          </td>
+
+                          <td
+                            valign='top'
+                            style='padding:7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#374151;'
+                          >
+                            {{eventType}}
+                          </td>
+                        </tr>
+
+                        <!-- Registration ID -->
+                        <tr>
+                          <td
+                            valign='top'
+                            style='padding:7px 8px 7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#6B7280;'
+                          >
+                            🔖 Registration ID
+                          </td>
+
+                          <td
+                            valign='top'
+                            style='padding:7px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; font-weight:600; color:#111827;'
+                          >
+                            {{registrationId}}
+                          </td>
+                        </tr>
+
+                      </table>
+
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Cancellation Reason -->
+                {{#if cancellationReason}}
+                  <table
+                    role='presentation'
+                    width='100%'
+                    cellspacing='0'
+                    cellpadding='0'
+                    border='0'
+                    style='width:100%; margin:0 0 28px 0;'
+                  >
+                    <tr>
+                      <td
+                        style='padding:16px 18px; background-color:#F9FAFB; border-left:4px solid #9CA3AF; border-radius:4px;'
+                      >
+                        <p
+                          style='margin:0 0 6px 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; font-weight:700; color:#374151;'
+                        >
+                          Cancellation Reason
+                        </p>
+
+                        <p
+                          style='margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:23px; color:#6B7280;'
+                        >
+                          {{cancellationReason}}
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                {{/if}}
+
+                <!-- Registration Information -->
+                <table
+                  role='presentation'
+                  width='100%'
+                  cellspacing='0'
+                  cellpadding='0'
+                  border='0'
+                  style='width:100%; margin:0 0 28px 0;'
+                >
+                  <tr>
+                    <td
+                      style='padding:16px 18px; background-color:#EEF2FF; border-left:4px solid #4F46E5; border-radius:4px;'
+                    >
+                      <p
+                        style='margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:23px; color:#3730A3;'
+                      >
+                        Your registration for this event is no longer active.
+                        You do not need to take any further action regarding
+                        this registration.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- CTA -->
+                {{#if eventsUrl}}
+                  <table
+                    role='presentation'
+                    cellspacing='0'
+                    cellpadding='0'
+                    border='0'
+                    align='center'
+                    style='margin:0 auto 28px auto;'
+                  >
+                    <tr>
+                      <td
+                        align='center'
+                        bgcolor='#4F46E5'
+                        style='background-color:#4F46E5; border-radius:7px;'
+                      >
+                        <a
+                          href='{{eventsUrl}}'
+                          target='_blank'
+                          style='display:inline-block; padding:14px 28px; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:24px; font-weight:700; color:#FFFFFF; text-decoration:none; background-color:#4F46E5; border:1px solid #4F46E5; border-radius:7px;'
+                        >
+                          Explore Other Events
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                {{/if}}
+
+                <!-- Final Message -->
+                <table
+                  role='presentation'
+                  width='100%'
+                  cellspacing='0'
+                  cellpadding='0'
+                  border='0'
+                >
+                  <tr>
+                    <td
+                      style='padding:16px 18px; background-color:#F9FAFB; border-left:4px solid #D1D5DB; border-radius:4px;'
+                    >
+                      <p
+                        style='margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:23px; color:#6B7280;'
+                      >
+                        We appreciate your understanding. Please check Smart
+                        Events for other upcoming events you may be interested
+                        in.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                align='center'
+                style='padding:24px 32px; background-color:#F9FAFB; border-top:1px solid #E5E7EB;'
+              >
+
+                <p
+                  style='margin:0 0 8px 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#6B7280;'
+                >
+                  Need help? Contact us at
+                  <a
+                    href='mailto:{{supportEmail}}'
+                    style='color:#4F46E5; text-decoration:none;'
+                  >
+                    {{supportEmail}}
+                  </a>
+                </p>
+
+                <p
+                  style='margin:0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#9CA3AF;'
+                >
+                  ©
+                  {{year}}
+                  Smart Events. All rights reserved.
+                </p>
+
+              </td>
+            </tr>
+
+          </table>
+          <!-- End Main Container -->
+
+        </td>
+      </tr>
+    </table>
+    <!-- End Full Email Wrapper -->
+
+  </body>
+</html>

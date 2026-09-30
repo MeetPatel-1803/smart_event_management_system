@@ -10,17 +10,25 @@ export const CONSTANTS = {
   },
   EMAIL: {
     WELCOME: {
-      SUB: 'Welcome to Smart event management system',
-      TEXT: `Welcome to Smart event management system. Your account has been created successfully.`,
+      SUB: 'Welcome to Smart Events!',
     },
     RESET_PASSWORD: {
-      SUB: 'Reset your password',
-      TEXT: (url: string) =>
-        `Click on the link to reset your password. This link will expire in 1 minutes. ${url}`,
+      SUB: 'Reset Your Password',
+    },
+    REGISTRATION_CONFIRMATION: {
+      SUB: 'Registration Confirmed – See You There!',
+    },
+    EVENT_REMINDER: {
+      SUB: 'Reminder: Your Event Is Coming Up!',
+    },
+    EVENT_CANCELLED: {
+      SUB: 'Event Cancelled',
+    },
+    WAITLIST_PROMOTION: {
+      SUB: "Great News – You're Off the Waitlist!",
     },
     SEND_TICKET: {
       SUB: 'Your Event Ticket',
-      TEXT: `Thank you for your registration. Please find your event ticket attached.`,
       FILE_NAME: 'ticket.pdf',
     },
   },
@@ -72,12 +80,33 @@ export const CONSTANTS = {
   EVENT_JOBS: {
     PROCESS_NEXT_WAITING_USER: 'process-next-waiting-user',
     SEND_CONFIRMATION_EMAIL: 'send-confirmation-email',
+    SEND_EVENT_REMINDER: 'send-event-reminder',
     GENERATE_QR_CODE: 'generate-qr-code',
-  },
+  } as const,
   SORT: {
     ASC: 'ASC',
     DESC: 'DESC',
   } as const,
+  SOCKET: {
+    NAMESPACE: '/notifications',
+    EVENTS: {
+      REGISTRATION_SUCCESS: 'registration:success',
+      EVENT_FULL: 'event:full',
+      WAITLIST_PROMOTED: 'waitlist:promoted',
+      EVENT_CANCELLED: 'event:cancelled',
+      EVENT_UPDATED: 'event:updated',
+      DASHBOARD_UPDATE: 'organizer:dashboard:update',
+      JOIN_EVENT_ROOM: 'event:join',
+      LEAVE_EVENT_ROOM: 'event:leave',
+      EXCEPTION: 'exception',
+    } as const,
+    ROOMS: {
+      user: (userId: string) => `user:${userId}`,
+      event: (eventId: string) => `event:${eventId}`,
+      organizerDashboard: (organiserId: string) =>
+        `organizer-dashboard:${organiserId}`,
+    },
+  },
   PAYMENT_PROVIDER: Symbol('PAYMENT_PROVIDER'),
   STRIPE_EVENTS: {
     CHECKOUT_SESSION_COMPLETED: 'checkout.session.completed',

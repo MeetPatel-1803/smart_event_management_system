@@ -59,6 +59,12 @@ export class AuthService {
     newUser.refreshToken = refreshToken;
     await this.userRepository.save(newUser);
 
+    await this.emailService.sendWelcomeEmail(email, {
+      userName: name,
+      supportEmail: process.env.SUPPORT_EMAIL!,
+      year: Number(process.env.YEAR!),
+    });
+
     return new ResponseDto({
       data: new RegisterResponseDto(newUser),
       meta: new AuthTokenDto({ accessToken, refreshToken }),

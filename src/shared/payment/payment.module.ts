@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/entities/user.entity';
 import { PaymentHistory } from './entities/payment.entity';
 import { Event } from 'src/modules/events/entities/event.entity';
+import { UserEvent } from 'src/modules/events/entities/user-event.entity';
 import { StripeProvider } from './providers/stripe/stripe.provider';
 import { PaymentWebhookController } from './payment.webhook.controller';
 import { ConfigurableModuleClass } from './payment.module-definition';
@@ -16,7 +17,7 @@ import { QueueModule } from '../queue/queue.module';
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Event, PaymentHistory]),
+    TypeOrmModule.forFeature([User, Event, PaymentHistory, UserEvent]),
     AuthModule,
     QueueModule,
   ],

@@ -16,6 +16,7 @@ import { SeedersModule } from './database/seeders/seeders.module';
 import { createObserveModule } from '@nestjs/observe';
 import { PaymentModule } from './shared/payment/payment.module';
 import { getPaymentProvidersConfig } from './shared/payment/configs/providers.config';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -37,6 +38,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     PaymentModule.forRootAsync({
       useFactory: () => getPaymentProvidersConfig(),
     }),
+    NotificationsModule,
     UsersModule,
     AuthModule,
     EmailModule,

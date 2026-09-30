@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Messages } from 'src/shared/messages/messages';
 import { Helper } from 'src/common/helper/helper.service';
+import { NotificationsService } from 'src/modules/notifications/notifications.service';
 
 @Processor(CONSTANTS.QUEUE.EVENT_WAITING_LIST)
 export class EventProcessor extends WorkerHost {
@@ -19,6 +20,7 @@ export class EventProcessor extends WorkerHost {
     private readonly userEvent: Repository<UserEvent>,
     @InjectRepository(Event)
     private readonly event: Repository<Event>,
+    private readonly notificationsService: NotificationsService,
   ) {
     super();
   }
@@ -62,9 +64,14 @@ export class EventProcessor extends WorkerHost {
           'COALESCE(SUM(userEvent.noOfSeatsRequired), 0)',
           'bookedSeats',
         )
+        .addSelect('events.name', 'name')
         .groupBy('events.id')
         .addGroupBy('events.capacity')
-        .getRawOne()) as { capacity: number; bookedSeats: string };
+        .getRawOne()) as {
+        capacity: number;
+        bookedSeats: string;
+        name: string;
+      };
 
       const capacity = result?.capacity || 0;
       const bookedSeats = Number(result?.bookedSeats) || 0;
@@ -80,6 +87,17 @@ export class EventProcessor extends WorkerHost {
       userEventDetails.expiresAt = Helper.getPaymentWindowExpiration();
 
       await this.userEvent.save(userEventDetails);
+
+      this.notificationsService.notifyWaitlistPromoted(
+        userEventDetails.userId,
+        {
+          registrationId: userEventDetails.id,
+          eventId,
+          eventName: result?.name,
+          noOfSeats: userEventDetails.noOfSeatsRequired,
+          message: `A seat opened up for "${result?.name}" — complete payment to confirm your spot.`,
+        },
+      );
     }
 
     // Further payment process.

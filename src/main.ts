@@ -6,6 +6,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import morgan from 'morgan';
 import { ApiErrorFilter } from './common/filters/http-exception.filter';
 import { SeederRunner } from './database/seeders/seed';
+import { RedisIoAdapter } from './shared/socket/redis-io.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -37,6 +38,10 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ApiErrorFilter());
 
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis();
+  app.useWebSocketAdapter(redisIoAdapter);
+
   const command = process.argv[2];
 
   if (command === 'seed') {
@@ -45,7 +50,7 @@ async function bootstrap() {
       await seederRunner.run();
       await app.close();
       process.exit(0);
-    } catch (error) {
+    } catch (error: any) {
       console.error(`❌ ${error}`);
       process.exit(1);
     }

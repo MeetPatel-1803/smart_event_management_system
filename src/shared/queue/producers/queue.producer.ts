@@ -1,7 +1,7 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { CONSTANTS } from 'src/common/constants/app.constants';
-import { Queue } from 'bullmq';
+import { JobsOptions, Queue } from 'bullmq';
 
 @Injectable()
 export class QueueProducer {
@@ -18,8 +18,8 @@ export class QueueProducer {
     return await this.eventWaitingListQueue.add(name, eventId);
   }
 
-  async addEmailJob(name: string, payload: any) {
-    return await this.emailQueue.add(name, payload);
+  async addEmailJob(name: string, payload: any, options?: JobsOptions) {
+    return await this.emailQueue.add(name, payload, options);
   }
 
   async addQrCodeJob(name: string, payload: any) {
