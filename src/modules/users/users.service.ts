@@ -24,6 +24,7 @@ import { QueueProducer } from 'src/shared/queue/producers/queue.producer';
 import { CONSTANTS } from 'src/common/constants/app.constants';
 import { PaymentService } from 'src/shared/payment/payment.service';
 import { Helper } from 'src/common/helper/helper.service';
+import { NotificationsService } from 'src/modules/notifications/notifications.service';
 
 @Injectable()
 export class UsersService {
@@ -36,6 +37,7 @@ export class UsersService {
 
     private readonly queueProducer: QueueProducer,
     private readonly paymentService: PaymentService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async listEvents(
@@ -145,6 +147,17 @@ export class UsersService {
       registrationId: registration.id,
       noOfSeats,
     });
+
+    // Seats are provisionally held for PAYMENT_PENDING registrations too, so
+    // this is the earliest point capacity can be considered exhausted.
+    if (availableSeats - noOfSeats <= 0) {
+      this.notificationsService.notifyEventFull(event.organiser_id, {
+        eventId: event.id,
+        eventName: event.name,
+        capacity: event.capacity,
+        message: `"${event.name}" has reached full capacity.`,
+      });
+    }
 
     return new RegisterEventResDto({ registration, ...paymentResult });
   }

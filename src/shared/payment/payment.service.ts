@@ -21,6 +21,7 @@ import {
   RegistrationStatus,
 } from 'src/modules/events/entities/user-event.entity';
 import { QueueProducer } from '../queue/producers/queue.producer';
+import { NotificationsService } from 'src/modules/notifications/notifications.service';
 
 @Injectable()
 export class PaymentService {
@@ -29,11 +30,14 @@ export class PaymentService {
     private readonly eventRepository: Repository<Event>,
     @InjectRepository(PaymentHistory)
     private readonly paymentRepository: Repository<PaymentHistory>,
+    @InjectRepository(UserEvent)
+    private readonly userEventRepository: Repository<UserEvent>,
 
     @Inject(CONSTANTS.PAYMENT_PROVIDER)
     private readonly paymentProvider: PaymentProvider,
 
     private readonly queueProducer: QueueProducer,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async createPayment(body: CreatePaymentDto): Promise<CreatePaymentResDto> {
@@ -117,6 +121,21 @@ export class PaymentService {
         registrationId,
       },
     );
+
+    const registration = await this.userEventRepository.findOne({
+      where: { id: registrationId },
+      relations: { event: true },
+    });
+
+    if (registration) {
+      this.notificationsService.notifyRegistrationSuccess(registration.userId, {
+        registrationId: registration.id,
+        eventId: registration.eventId,
+        eventName: registration.event.name,
+        noOfSeats: registration.noOfSeatsRequired,
+        message: `Your registration for "${registration.event.name}" is confirmed!`,
+      });
+    }
   }
   async OnFailedPayment(
     paymentId: string,

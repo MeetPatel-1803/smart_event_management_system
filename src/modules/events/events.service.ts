@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Event } from './entities/event.entity';
-import { Repository } from 'typeorm';
+import { Event, EventStatus } from './entities/event.entity';
+import { In, Repository } from 'typeorm';
 import { ApiError } from 'src/shared/response/apiError.service';
 import { Messages } from 'src/shared/messages/messages';
 import {
@@ -12,14 +12,35 @@ import {
 } from './dto/event-response.dto';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 import { Helper } from 'src/common/helper/helper.service';
+import { RegistrationStatus, UserEvent } from './entities/user-event.entity';
+import { NotificationsService } from 'src/modules/notifications/notifications.service';
+import { CONSTANTS } from 'src/common/constants/app.constants';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
+    @InjectRepository(UserEvent)
+    private readonly userEventRepository: Repository<UserEvent>,
     private readonly imageService: CloudinaryService,
+    private readonly notificationsService: NotificationsService,
   ) {}
+
+  private async getActiveRegistrantIds(eventId: string): Promise<string[]> {
+    const registrations = await this.userEventRepository.find({
+      where: {
+        eventId,
+        status: In([
+          RegistrationStatus.REGISTERED,
+          RegistrationStatus.PAYMENT_PENDING,
+          RegistrationStatus.WAITLISTED,
+        ]),
+      },
+    });
+
+    return registrations.map((registration) => registration.userId);
+  }
 
   async create(
     body: CreateEventDto,
@@ -103,6 +124,9 @@ export class EventsService {
       throw ApiError.notFound(Messages.EVENT_NOT_FOUND);
     }
 
+    const wasCancelled = event.status === EventStatus.CANCELLED;
+    const isBeingCancelled = !wasCancelled && status === EventStatus.CANCELLED;
+
     event.capacity = capacity ?? event.capacity;
     event.name = name ?? event.name;
     event.description = description ?? event.description;
@@ -128,6 +152,34 @@ export class EventsService {
     updatedEvent.bannerImage = updatedEvent.bannerImage
       ? this.imageService.getImageUrl(updatedEvent.bannerImage)
       : null;
+
+    const registrantIds = await this.getActiveRegistrantIds(updatedEvent.id);
+
+    if (registrantIds.length) {
+      if (isBeingCancelled) {
+        this.notificationsService.notifyEventCancelled(registrantIds, {
+          eventId: updatedEvent.id,
+          eventName: updatedEvent.name,
+          message: `"${updatedEvent.name}" has been cancelled by the organiser.`,
+        });
+      } else {
+        this.notificationsService.notifyEventUpdated(registrantIds, {
+          eventId: updatedEvent.id,
+          eventName: updatedEvent.name,
+          changes: updateEventDto as unknown as Record<string, unknown>,
+          message: `Details for "${updatedEvent.name}" have been updated.`,
+        });
+      }
+    }
+
+    this.notificationsService.pushOrganizerDashboardUpdate(
+      updatedEvent.organiser_id,
+      isBeingCancelled
+        ? CONSTANTS.SOCKET.EVENTS.EVENT_CANCELLED
+        : CONSTANTS.SOCKET.EVENTS.EVENT_UPDATED,
+      updatedEvent.id,
+      updatedEvent,
+    );
 
     return new EventResponseDto({ event: updatedEvent });
   }
