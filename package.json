@@ -24,7 +24,8 @@
     "migration:run": "pnpm run typeorm migration:run -d src/database/data-source.ts",
     "migration:revert": "pnpm run typeorm migration:revert -d src/database/data-source.ts",
     "prepare": "husky",
-    "seed": "ts-node -r tsconfig-paths/register src/main.ts seed"
+    "seed": "ts-node -r tsconfig-paths/register src/main.ts seed",
+    "_comment_swagger:export": "node --env-file=.env dist/main --export-swagger"
   },
   "dependencies": {
     "@bull-board/api": "^9.10.1",
@@ -72,6 +73,7 @@
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
+    "@nestjs/swagger": "^12.0.2",
     "@nestjs/testing": "^11.0.1",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.16.2",
