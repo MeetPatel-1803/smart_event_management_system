@@ -7,6 +7,10 @@ import morgan from 'morgan';
 import { ApiErrorFilter } from './common/filters/http-exception.filter';
 import { SeederRunner } from './database/seeders/seed';
 import { RedisIoAdapter } from './shared/socket/redis-io.adapter';
+// import { SwaggerModule } from '@nestjs/swagger';
+// import { swaggerConfig } from './config/swagger.config';
+// import path from 'path';
+// import * as fs from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -55,6 +59,40 @@ async function bootstrap() {
       process.exit(1);
     }
   }
+
+  // -------------- Swagger/Open API --------------
+
+  // const documentFactory = () =>
+  //   SwaggerModule.createDocument(app, swaggerConfig);
+
+  // SwaggerModule.setup('api/docs', app, documentFactory, {
+  //   swaggerOptions: {
+  //     persistAuthorization: true, // Keeps token refreshed on reload
+  //   },
+  // });
+
+  // const isDevMode =
+  //   process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
+  // const hasExportFlag = process.argv.includes('--export-swagger');
+
+  // // 📁 Production-Grade Conditional File Export Check
+  // // Run your app with: EXPORT_SWAGGER=true npm run start
+  // if (isDevMode || hasExportFlag) {
+  //   const document = documentFactory();
+
+  //   const outputPath = path.join(process.cwd(), 'openapi-spec.json');
+  //   fs.writeFileSync(outputPath, JSON.stringify(document, null, 2), 'utf8');
+  //   console.log(`✅ OpenAPI contract compiled successfully to: ${outputPath}`);
+
+  //   // If your ONLY goal was exporting the file (e.g., in a CI/CD pipeline step),
+  //   // you can close the process immediately instead of keeping the port open.
+  //   if (process.env.CI === 'true') {
+  //     await app.close();
+  //     process.exit(0);
+  //   }
+  // }
+
+  // ----------------------------------------------
 
   await app.listen(process.env['PORT'] ?? 3000);
   console.log(`Server is running on port ${process.env['PORT'] ?? 3000} 🚀`);
